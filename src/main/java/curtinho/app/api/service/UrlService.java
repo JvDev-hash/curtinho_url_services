@@ -1,10 +1,14 @@
 package curtinho.app.api.service;
 
+import curtinho.app.api.helper.StringUtils;
+import curtinho.app.api.model.Url;
 import curtinho.app.api.repository.UrlRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
-import java.util.Optional.*;
+
+import java.time.LocalDateTime;
 
 @Service
 public class UrlService {
@@ -17,7 +21,20 @@ public class UrlService {
     }
 
     public String shortenUrl(String longUrl){
-        return null;
+
+        StringUtils utils = new StringUtils();
+
+        String generatedString = utils.generateRandomString(8);
+        LocalDateTime today = LocalDateTime.now();
+        var url = new Url();
+
+        url.setOriginalUrl(longUrl);
+        url.setShortenedUri(generatedString);
+        url.setExpirationDate(today.plusDays(15));
+
+        var entity = urlRepository.save(url);
+
+        return entity.getShortenedUri();
     }
 
     public String getOriginalUrl(String shortUri){

@@ -5,8 +5,6 @@ import curtinho.app.api.service.UrlService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/")
 public class UrlController {
@@ -20,7 +18,7 @@ public class UrlController {
     @PostMapping("s")
     public String shortenUrl(@RequestBody UrlDTO urlDTO){
 
-        return null;
+        return urlService.shortenUrl(urlDTO.getLongUrl());
     }
 
     @GetMapping("p/{shortUri}")

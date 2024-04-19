@@ -1,12 +1,8 @@
 package curtinho.app.api.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
 public class UrlDTO {
 
     private String longUrl;
