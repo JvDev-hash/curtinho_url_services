@@ -1,42 +1,49 @@
 package curtinho.app.api.configuration;
 
-import curtinho.app.api.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
+import curtinho.app.api.service.UserService;
+import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Component
-public class AuthorizationFilter extends OncePerRequestFilter {
+public class AuthorizationFilter implements Filter {
 
     @Autowired
-    UserRepository userRepository;
+    private UserService userService;
+
+    Logger logger = LoggerFactory.getLogger(AuthorizationFilter.class);
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    public void init(FilterConfig filterConfig){
+        logger.info("Filtro Iniciado!");
+    }
+    
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletRequest req = (HttpServletRequest) servletRequest;
+        HttpServletResponse res = (HttpServletResponse) servletResponse;
 
-        var authHeader = request.getHeader("Authorization");
+        var authHeader = req.getHeader("Authorization");
+        if(req.getMethod().equals("POST")){
+            if (authHeader != null) {
+                var user = userService.getByKey(authHeader);
+                if(user == null) { res.setStatus(403); servletResponse.getOutputStream().write("Token is not valid".getBytes());}
 
-        if(authHeader != null){
-            var user = this.userRepository.findByKey(authHeader)
-                    .orElseThrow(() -> new EntityNotFoundException("There is no value with " + authHeader));
-            filterChain.doFilter(request, response);
+                filterChain.doFilter(req, res);
+            } else {
+                res.setStatus(400);
+                servletResponse.getOutputStream().write("Token cannot be Null".getBytes());
+            }
         } else {
-            throw new IllegalArgumentException("Token cannot be Null");
+            filterChain.doFilter(req, res);
         }
 
 
-    }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request){
-        String path = request.getServletPath();
-        return !path.startsWith("p/{shortUri}");
     }
 }
