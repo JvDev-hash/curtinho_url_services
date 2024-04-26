@@ -32,7 +32,7 @@ public class UrlController {
     public ResponseEntity<?> shortenUrl(@RequestBody UrlDTO urlDTO){
         var response = new UrlResponseDTO();
         try {
-            response.setShortenUri(urlService.shortenUrl(urlDTO.getLongUrl()));
+            response.setShortenUri(urlService.shortenUrl(urlDTO.getLongUrl(), urlDTO.getDays()));
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e){
             logger.error(e.getMessage());

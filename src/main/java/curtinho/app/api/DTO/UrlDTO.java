@@ -6,4 +6,6 @@ import lombok.*;
 public class UrlDTO {
 
     private String longUrl;
+
+    private Integer days;
 }

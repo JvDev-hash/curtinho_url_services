@@ -20,7 +20,7 @@ public class UrlService {
         this.urlRepository = urlRepository;
     }
 
-    public String shortenUrl(String longUrl){
+    public String shortenUrl(String longUrl, Integer days){
 
         StringUtils utils = new StringUtils();
 
@@ -30,7 +30,11 @@ public class UrlService {
 
         url.setOriginalUrl(longUrl);
         url.setShortenedUri(generatedString);
-        url.setExpirationDate(today.plusDays(15));
+        if(days.compareTo(365) < 0) {
+            url.setExpirationDate(today.plusDays(days));
+        } else {
+            url.setExpirationDate(today.plusDays(365));
+        }
 
         var entity = urlRepository.save(url);
 
