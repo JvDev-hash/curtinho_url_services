@@ -2,6 +2,7 @@ package curtinho.app.api.controller;
 
 import curtinho.app.api.DTO.UrlDTO;
 import curtinho.app.api.DTO.UrlResponseDTO;
+import curtinho.app.api.helper.ReturnPages;
 import curtinho.app.api.service.QrcodeService;
 import curtinho.app.api.service.UrlService;
 import org.slf4j.Logger;
@@ -10,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/")
@@ -51,11 +54,17 @@ public class UrlController {
     }
 
     @GetMapping("p/{shortUri}")
-    public RedirectView popUrl(@PathVariable String shortUri){
-        var longUrl = urlService.getOriginalUrl(shortUri);
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl(longUrl);
+    public Object popUrl(@PathVariable String shortUri){
+        var entity = urlService.getOriginalUrl(shortUri);
+        LocalDateTime today = LocalDateTime.now();
 
-        return redirectView;
+        if(today.isBefore(entity.getExpirationDate())) {
+            RedirectView redirectView = new RedirectView();
+            redirectView.setUrl(entity.getOriginalUrl());
+
+            return redirectView;
+
+        }
+        return new ResponseEntity<>(new ReturnPages().notFoundPage(), HttpStatus.NOT_FOUND);
     }
 }

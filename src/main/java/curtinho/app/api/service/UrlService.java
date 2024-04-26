@@ -37,9 +37,9 @@ public class UrlService {
         return entity.getShortenedUri();
     }
 
-    public String getOriginalUrl(String shortUri){
+    public Url getOriginalUrl(String shortUri){
         var entity = urlRepository.findByShortenedUri(shortUri)
                 .orElseThrow(() -> new EntityNotFoundException("There is no value with " + shortUri));
-        return entity.getOriginalUrl();
+        return entity;
     }
 }
