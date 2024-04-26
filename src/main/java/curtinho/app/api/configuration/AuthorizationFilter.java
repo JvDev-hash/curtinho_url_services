@@ -1,6 +1,7 @@
 package curtinho.app.api.configuration;
 
 import curtinho.app.api.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -8,13 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import java.io.IOException;
 
 @Component
 public class AuthorizationFilter implements Filter {
 
-    @Autowired
     private UserService userService;
 
     Logger logger = LoggerFactory.getLogger(AuthorizationFilter.class);
@@ -29,13 +31,24 @@ public class AuthorizationFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse res = (HttpServletResponse) servletResponse;
 
+        ServletContext servletContext = servletRequest.getServletContext();
+        WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
+        try {
+            userService = webApplicationContext.getBean(UserService.class);
+        }catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+
         var authHeader = req.getHeader("Authorization");
         if(req.getMethod().equals("POST")){
             if (authHeader != null) {
-                var user = userService.getByKey(authHeader);
-                if(user == null) { res.setStatus(403); servletResponse.getOutputStream().write("Token is not valid".getBytes());}
-
-                filterChain.doFilter(req, res);
+                try {
+                    var user = userService.getByKey(authHeader);
+                    filterChain.doFilter(req, res);
+                } catch (EntityNotFoundException e){
+                    res.setStatus(403);
+                    servletResponse.getOutputStream().write("Token is not valid".getBytes());
+                }
             } else {
                 res.setStatus(400);
                 servletResponse.getOutputStream().write("Token cannot be Null".getBytes());
