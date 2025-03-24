@@ -35,7 +35,7 @@ public class UrlController {
         var response = new UrlResponseDTO();
         try {
             response.setShortenUri(urlService.shortenUrl(urlDTO.getLongUrl(), urlDTO.getDays()));
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e){
             logger.error(e.getMessage());
             return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -47,7 +47,7 @@ public class UrlController {
         var response = new UrlResponseDTO();
         try {
             response.setShortenUri(qrcodeService.generateQrcode(urlDTO.getLongUrl()));
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e){
             logger.error(e.getMessage());
             return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
