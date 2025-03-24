@@ -63,7 +63,56 @@ Note: The H2 database is in-memory, which means all data will be reset when the 
 
 ## API Endpoints
 
-[Document your API endpoints here]
+### URL Shortening
+
+#### Create Short URL
+- **Endpoint**: `POST /s`
+- **Description**: Creates a shortened URL from a long URL
+- **Request Body**:
+```json
+{
+    "longUrl": "https://example.com/very/long/url",
+    "days": 30
+}
+```
+- **Response**: 
+```json
+{
+    "shortenUri": "generated-short-url"
+}
+```
+
+#### Access Short URL
+- **Endpoint**: `GET /p/{shortUri}`
+- **Description**: Redirects to the original URL
+- **Parameters**: 
+  - `shortUri`: The shortened URL identifier
+- **Response**: Redirects to the original URL
+
+### QR Code Generation
+
+#### Generate QR Code
+- **Endpoint**: `POST /qr`
+- **Description**: Generates a QR code for a given URL
+- **Request Body**:
+```json
+{
+    "longUrl": "https://example.com/very/long/url"
+}
+```
+- **Response**: 
+```json
+{
+    "shortenUri": "data:image/png;base64,..."
+}
+```
+
+## Security
+
+The API endpoints are secured with token-based authentication:
+- `POST /s` and `POST /qr` endpoints require an Authorization header with a valid token
+- `GET /p/{shortUri}` endpoint is publicly accessible
+- H2 console is accessible without authentication in development mode
 
 ## Contributing
 
