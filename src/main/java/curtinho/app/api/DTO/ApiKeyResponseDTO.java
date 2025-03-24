@@ -3,7 +3,7 @@ package curtinho.app.api.DTO;
 import lombok.Data;
 
 @Data
-public class UserResponseDTO {
+public class ApiKeyResponseDTO {
     
     private String hashKey;
 }

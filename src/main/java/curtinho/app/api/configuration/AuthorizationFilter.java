@@ -1,6 +1,6 @@
 package curtinho.app.api.configuration;
 
-import curtinho.app.api.service.UserService;
+import curtinho.app.api.service.ApiKeyService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ import java.io.IOException;
 @Component
 public class AuthorizationFilter implements Filter {
 
-    private UserService userService;
+    private ApiKeyService apiKeyService;
 
     Logger logger = LoggerFactory.getLogger(AuthorizationFilter.class);
 
@@ -31,7 +31,7 @@ public class AuthorizationFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) servletResponse;
 
         // Skip authorization for H2 console and usrKey endpoint
-        if (req.getRequestURI().startsWith("/h2-console") || req.getRequestURI().equals("/usrKey")) {
+        if (req.getRequestURI().startsWith("/h2-console") || req.getRequestURI().equals("/usrKey") || req.getRequestURI().equals("/s")) {
             filterChain.doFilter(req, res);
             return;
         }
@@ -39,7 +39,7 @@ public class AuthorizationFilter implements Filter {
         ServletContext servletContext = servletRequest.getServletContext();
         WebApplicationContext webApplicationContext = WebApplicationContextUtils.getWebApplicationContext(servletContext);
         try {
-            userService = webApplicationContext.getBean(UserService.class);
+            apiKeyService = webApplicationContext.getBean(ApiKeyService.class);
         }catch (Exception e) {
             logger.error(e.getMessage());
         }
@@ -48,7 +48,7 @@ public class AuthorizationFilter implements Filter {
         if(req.getMethod().equals("POST")){
             if (authHeader != null) {
                 try {
-                    var user = userService.getByKey(authHeader);
+                    var user = apiKeyService.getByKey(authHeader);
                     filterChain.doFilter(req, res);
                 } catch (EntityNotFoundException e){
                     res.setStatus(403);

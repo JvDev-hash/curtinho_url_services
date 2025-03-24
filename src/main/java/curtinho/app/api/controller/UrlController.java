@@ -2,12 +2,12 @@ package curtinho.app.api.controller;
 
 import curtinho.app.api.DTO.UrlDTO;
 import curtinho.app.api.DTO.UrlResponseDTO;
-import curtinho.app.api.DTO.UserDTO;
-import curtinho.app.api.DTO.UserResponseDTO;
+import curtinho.app.api.DTO.ApiKeyDTO;
+import curtinho.app.api.DTO.ApiKeyResponseDTO;
 import curtinho.app.api.helper.ReturnPages;
 import curtinho.app.api.service.QrcodeService;
 import curtinho.app.api.service.UrlService;
-import curtinho.app.api.service.UserService;
+import curtinho.app.api.service.ApiKeyService;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.slf4j.Logger;
@@ -25,11 +25,11 @@ public class UrlController {
 
     private final UrlService urlService;
     private final QrcodeService qrcodeService;
-    private final UserService userService;
+    private final ApiKeyService userService;
 
     Logger logger = LoggerFactory.getLogger(UrlController.class);
 
-    public UrlController(UrlService urlService, QrcodeService qrcodeService, UserService userService) {
+    public UrlController(UrlService urlService, QrcodeService qrcodeService, ApiKeyService userService) {
         this.urlService = urlService;
         this.qrcodeService = qrcodeService;
         this.userService = userService;
@@ -61,11 +61,11 @@ public class UrlController {
     }
 
     @PostMapping("usrKey")
-    public ResponseEntity<?> createUsrKey(@RequestBody UserDTO userDTO){
-        var response = new UserResponseDTO();
+    public ResponseEntity<?> createUsrKey(@RequestBody ApiKeyDTO userDTO){
+        var response = new ApiKeyResponseDTO();
 
         try {
-            response.setHashKey(userService.createUserKey(userDTO.getUsername(), userDTO.getAppName()));
+            response.setHashKey(userService.createApiKey(userDTO.getUsername(), userDTO.getAppName()));
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e){
             logger.error(e.getMessage());

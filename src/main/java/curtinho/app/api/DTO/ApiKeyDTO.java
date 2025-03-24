@@ -3,7 +3,7 @@ package curtinho.app.api.DTO;
 import lombok.Data;
 
 @Data
-public class UserDTO {
+public class ApiKeyDTO {
     
     private String username;
 

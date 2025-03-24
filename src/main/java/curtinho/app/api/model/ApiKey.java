@@ -4,9 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "tbl_users")
+@Table(name = "tbl_apiKeys")
 @Data
-public class User {
+public class ApiKey {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
