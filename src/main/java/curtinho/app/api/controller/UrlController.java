@@ -5,6 +5,8 @@ import curtinho.app.api.DTO.UrlResponseDTO;
 import curtinho.app.api.helper.ReturnPages;
 import curtinho.app.api.service.QrcodeService;
 import curtinho.app.api.service.UrlService;
+import jakarta.persistence.EntityNotFoundException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -55,15 +57,20 @@ public class UrlController {
 
     @GetMapping("p/{shortUri}")
     public Object popUrl(@PathVariable String shortUri){
-        var entity = urlService.getOriginalUrl(shortUri);
-        LocalDateTime today = LocalDateTime.now();
+        try{
+            var entity = urlService.getOriginalUrl(shortUri);
+            LocalDateTime today = LocalDateTime.now();
 
-        if(today.isBefore(entity.getExpirationDate())) {
-            RedirectView redirectView = new RedirectView();
-            redirectView.setUrl(entity.getOriginalUrl());
-
-            return redirectView;
-
+            if(today.isBefore(entity.getExpirationDate())) {
+                RedirectView redirectView = new RedirectView();
+                redirectView.setUrl(entity.getOriginalUrl());
+    
+                return redirectView;
+    
+            }
+            
+        } catch (EntityNotFoundException e){
+            return new ResponseEntity<>(new ReturnPages().notFoundPage(), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(new ReturnPages().notFoundPage(), HttpStatus.NOT_FOUND);
     }
