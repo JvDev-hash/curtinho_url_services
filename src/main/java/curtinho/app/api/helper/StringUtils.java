@@ -3,9 +3,6 @@ package curtinho.app.api.helper;
 import lombok.NoArgsConstructor;
 import net.glxn.qrgen.QRCode;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 import java.util.Random;

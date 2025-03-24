@@ -12,9 +12,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String key;
+    @Column(name = "user_key")
+    private String userKey;
 
+    @Column(name = "app_name")
     private String appName;
 
+    @Column(name = "hash_key")
     private String hashKey;
 }

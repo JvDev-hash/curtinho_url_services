@@ -5,7 +5,6 @@ import curtinho.app.api.model.Url;
 import curtinho.app.api.repository.UrlRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

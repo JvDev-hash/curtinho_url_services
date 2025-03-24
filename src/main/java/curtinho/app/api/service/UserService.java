@@ -17,7 +17,7 @@ public class UserService {
     }
 
     public User getByKey(String key){
-        var user = userRepository.findByKey(key)
+        var user = userRepository.findByUserKey(key)
                 .orElseThrow(() -> new EntityNotFoundException("There is no value with " + key));
         return user;
     }

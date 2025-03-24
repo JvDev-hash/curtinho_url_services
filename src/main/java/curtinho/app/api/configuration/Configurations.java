@@ -17,16 +17,23 @@ public class Configurations {
         FilterRegistrationBean<AuthorizationFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(new AuthorizationFilter());
         registrationBean.addUrlPatterns("/*");
+        registrationBean.addUrlPatterns("/h2-console/*");
+        registrationBean.setOrder(1);
         return registrationBean;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.csrf(csrf -> csrf.disable())
+                .headers(headers -> headers
+                    .frameOptions().disable()
+                    .xssProtection().disable()
+                    .contentSecurityPolicy("frame-ancestors 'self'"))
                 .authorizeHttpRequests(req -> {
                     req.requestMatchers(HttpMethod.GET,"p/{shortUri}").permitAll();
                     req.requestMatchers(HttpMethod.POST, "s").permitAll();
                     req.requestMatchers(HttpMethod.POST, "qr").permitAll();
+                    req.requestMatchers("/h2-console/**").permitAll();
                 })
                 .build();
     }
