@@ -30,8 +30,8 @@ public class AuthorizationFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse res = (HttpServletResponse) servletResponse;
 
-        // Skip authorization for H2 console
-        if (req.getRequestURI().startsWith("/h2-console")) {
+        // Skip authorization for H2 console and usrKey endpoint
+        if (req.getRequestURI().startsWith("/h2-console") || req.getRequestURI().equals("/usrKey")) {
             filterChain.doFilter(req, res);
             return;
         }

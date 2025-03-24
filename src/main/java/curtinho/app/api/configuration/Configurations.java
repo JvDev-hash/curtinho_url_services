@@ -33,6 +33,7 @@ public class Configurations {
                     req.requestMatchers(HttpMethod.GET,"p/{shortUri}").permitAll();
                     req.requestMatchers(HttpMethod.POST, "s").permitAll();
                     req.requestMatchers(HttpMethod.POST, "qr").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "usrKey").permitAll();
                     req.requestMatchers("/h2-console/**").permitAll();
                 })
                 .build();

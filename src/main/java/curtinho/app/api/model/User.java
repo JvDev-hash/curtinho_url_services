@@ -12,8 +12,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_key")
-    private String userKey;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "app_name")
     private String appName;

@@ -2,9 +2,12 @@ package curtinho.app.api.controller;
 
 import curtinho.app.api.DTO.UrlDTO;
 import curtinho.app.api.DTO.UrlResponseDTO;
+import curtinho.app.api.DTO.UserDTO;
+import curtinho.app.api.DTO.UserResponseDTO;
 import curtinho.app.api.helper.ReturnPages;
 import curtinho.app.api.service.QrcodeService;
 import curtinho.app.api.service.UrlService;
+import curtinho.app.api.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.slf4j.Logger;
@@ -22,12 +25,14 @@ public class UrlController {
 
     private final UrlService urlService;
     private final QrcodeService qrcodeService;
+    private final UserService userService;
 
     Logger logger = LoggerFactory.getLogger(UrlController.class);
 
-    public UrlController(UrlService urlService, QrcodeService qrcodeService) {
+    public UrlController(UrlService urlService, QrcodeService qrcodeService, UserService userService) {
         this.urlService = urlService;
         this.qrcodeService = qrcodeService;
+        this.userService = userService;
     }
 
     @PostMapping("s")
@@ -53,6 +58,19 @@ public class UrlController {
             return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @PostMapping("usrKey")
+    public ResponseEntity<?> createUsrKey(@RequestBody UserDTO userDTO){
+        var response = new UserResponseDTO();
+
+        try {
+            response.setHashKey(userService.createUserKey(userDTO.getUsername(), userDTO.getAppName()));
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e){
+            logger.error(e.getMessage());
+            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("p/{shortUri}")
