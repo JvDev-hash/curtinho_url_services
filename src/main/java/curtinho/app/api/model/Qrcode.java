@@ -14,7 +14,7 @@ public class Qrcode {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "qrcode")
+    @Column(name = "qrcode", columnDefinition = "TEXT")
     private String qrcode;
 
     @Column(name = "created_at")
