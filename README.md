@@ -87,7 +87,7 @@ Note: The H2 database is in-memory, which means all data will be reset when the 
 - **Description**: Redirects to the original URL
 - **Parameters**: 
   - `shortUri`: The shortened URL identifier
-- **Response**: Redirects to the original URL
+- **Response**: Redirects to the original URL or returns 404 if not found/expired
 
 ### QR Code Generation
 
@@ -104,6 +104,25 @@ Note: The H2 database is in-memory, which means all data will be reset when the 
 ```json
 {
     "shortenUri": "data:image/png;base64,..."
+}
+```
+
+### API Key Management
+
+#### Create User API Key
+- **Endpoint**: `POST /usrKey`
+- **Description**: Generates an API key for a user
+- **Request Body**:
+```json
+{
+    "username": "user123",
+    "appName": "MyApp"
+}
+```
+- **Response**: 
+```json
+{
+    "hashKey": "generated-api-key"
 }
 ```
 

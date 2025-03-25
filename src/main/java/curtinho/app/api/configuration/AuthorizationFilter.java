@@ -48,7 +48,7 @@ public class AuthorizationFilter implements Filter {
         if(req.getMethod().equals("POST")){
             if (authHeader != null) {
                 try {
-                    var user = apiKeyService.getByKey(authHeader);
+                    var apiKey = apiKeyService.getByKey(authHeader);
                     filterChain.doFilter(req, res);
                 } catch (EntityNotFoundException e){
                     res.setStatus(403);
