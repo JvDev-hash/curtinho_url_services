@@ -81,7 +81,8 @@ public class UrlController {
 
             if(today.isBefore(entity.getExpirationDate())) {
                 RedirectView redirectView = new RedirectView();
-                redirectView.setUrl(entity.getOriginalUrl());
+                var updatedEntity = urlService.updateAccessCount(entity, entity.getAccessCount() + 1);
+                redirectView.setUrl(updatedEntity.getOriginalUrl());
     
                 return redirectView;
     

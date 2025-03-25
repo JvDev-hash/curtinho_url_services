@@ -23,4 +23,7 @@ public class Url {
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate;
 
+    @Column(name = "acess_count")
+    private Long accessCount;
+
 }

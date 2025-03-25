@@ -29,6 +29,7 @@ public class UrlService {
 
         url.setOriginalUrl(longUrl);
         url.setShortenedUri(generatedString);
+        url.setAccessCount(0L);
         if(days.compareTo(365) < 0) {
             url.setExpirationDate(today.plusDays(days));
         } else {
@@ -44,5 +45,13 @@ public class UrlService {
         var entity = urlRepository.findByShortenedUri(shortUri)
                 .orElseThrow(() -> new EntityNotFoundException("There is no value with " + shortUri));
         return entity;
+    }
+
+    public Url updateAccessCount(Url targetUrl, Long newValue){
+        targetUrl.setAccessCount(newValue);
+
+        var returnEntity = urlRepository.save(targetUrl);
+
+        return returnEntity;
     }
 }
