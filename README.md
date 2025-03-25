@@ -33,7 +33,7 @@ Curtinho App Service is a backend service that provides URL shortening functiona
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/curtinho_url_services.git
+git clone https://github.com/JvDev-hash/curtinho_url_services.git
 ```
 
 2. Navigate to the project directory:
@@ -56,7 +56,7 @@ cd curtinho_url_services
 The application uses H2 in-memory database for development purposes. You can access the H2 console at:
 - URL: http://localhost:8080/h2-console
 - JDBC URL: jdbc:h2:mem:curtinhodb
-- Username: sa
+- Username: (any username)
 - Password: (any password)
 
 Note: The H2 database is in-memory, which means all data will be reset when the application restarts.
