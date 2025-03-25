@@ -57,7 +57,7 @@ The application uses H2 in-memory database for development purposes. You can acc
 - URL: http://localhost:8080/h2-console
 - JDBC URL: jdbc:h2:mem:curtinhodb
 - Username: sa
-- Password: (empty)
+- Password: (any password)
 
 Note: The H2 database is in-memory, which means all data will be reset when the application restarts.
 
@@ -129,8 +129,8 @@ Note: The H2 database is in-memory, which means all data will be reset when the 
 ## Security
 
 The API endpoints are secured with token-based authentication:
-- `POST /s` and `POST /qr` endpoints require an Authorization header with a valid token
-- `GET /p/{shortUri}` endpoint is publicly accessible
+- `POST /qr` endpoint require an Authorization header with a valid token
+- `GET /p/{shortUri}` and `POST /usrKey` endpoints is publicly accessible
 - H2 console is accessible without authentication in development mode
 
 ## Contributing
