@@ -31,7 +31,7 @@ public class AuthorizationFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) servletResponse;
 
         // Skip authorization for H2 console and usrKey endpoint
-        if (req.getRequestURI().startsWith("/h2-console") || req.getRequestURI().equals("/usrKey") || req.getRequestURI().equals("/s")) {
+        if (req.getRequestURI().startsWith("/h2-console") || req.getRequestURI().equals("/usrKey")) {
             filterChain.doFilter(req, res);
             return;
         }
@@ -52,10 +52,12 @@ public class AuthorizationFilter implements Filter {
                     filterChain.doFilter(req, res);
                 } catch (EntityNotFoundException e){
                     res.setStatus(403);
+                    logger.error(e.getMessage());
                     servletResponse.getOutputStream().write("Token is not valid".getBytes());
                 }
             } else {
                 res.setStatus(400);
+                logger.error("Token cannot be Null");
                 servletResponse.getOutputStream().write("Token cannot be Null".getBytes());
             }
         } else {

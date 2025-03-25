@@ -129,7 +129,7 @@ Note: The H2 database is in-memory, which means all data will be reset when the 
 ## Security
 
 The API endpoints are secured with token-based authentication:
-- `POST /qr` endpoint require an Authorization header with a valid token
+- `POST /qr` and `POST /s` endpoints require an Authorization header with a valid token
 - `GET /p/{shortUri}` and `POST /usrKey` endpoints is publicly accessible
 - H2 console is accessible without authentication in development mode
 

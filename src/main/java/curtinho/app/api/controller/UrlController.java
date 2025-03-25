@@ -89,6 +89,7 @@ public class UrlController {
             }
             
         } catch (EntityNotFoundException e){
+            logger.error(e.getMessage());
             return new ResponseEntity<>(new ReturnPages().notFoundPage(), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(new ReturnPages().notFoundPage(), HttpStatus.NOT_FOUND);
