@@ -2,12 +2,8 @@ package curtinho.app.api.controller;
 
 import curtinho.app.api.DTO.UrlDTO;
 import curtinho.app.api.DTO.UrlResponseDTO;
-import curtinho.app.api.DTO.ApiKeyDTO;
-import curtinho.app.api.DTO.ApiKeyResponseDTO;
 import curtinho.app.api.helper.ReturnPages;
-import curtinho.app.api.service.QrcodeService;
 import curtinho.app.api.service.UrlService;
-import curtinho.app.api.service.ApiKeyService;
 import jakarta.persistence.EntityNotFoundException;
 
 import org.slf4j.Logger;
@@ -20,22 +16,18 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.time.LocalDateTime;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/url")
 public class UrlController {
 
     private final UrlService urlService;
-    private final QrcodeService qrcodeService;
-    private final ApiKeyService userService;
 
     Logger logger = LoggerFactory.getLogger(UrlController.class);
 
-    public UrlController(UrlService urlService, QrcodeService qrcodeService, ApiKeyService userService) {
+    public UrlController(UrlService urlService) {
         this.urlService = urlService;
-        this.qrcodeService = qrcodeService;
-        this.userService = userService;
     }
 
-    @PostMapping("s")
+    @PostMapping("/gen")
     public ResponseEntity<?> shortenUrl(@RequestBody UrlDTO urlDTO){
         var response = new UrlResponseDTO();
         try {
@@ -47,33 +39,7 @@ public class UrlController {
         }
     }
 
-    @PostMapping("qr")
-    public ResponseEntity<?> createQr(@RequestBody UrlDTO urlDTO){
-        var response = new UrlResponseDTO();
-        try {
-            response.setShortenUri(qrcodeService.generateQrcode(urlDTO.getLongUrl()));
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (Exception e){
-            logger.error(e.getMessage());
-            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
-    @PostMapping("usrKey")
-    public ResponseEntity<?> createUsrKey(@RequestBody ApiKeyDTO userDTO){
-        var response = new ApiKeyResponseDTO();
-
-        try {
-            response.setHashKey(userService.createApiKey(userDTO.getUsername(), userDTO.getAppName()));
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (Exception e){
-            logger.error(e.getMessage());
-            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("p/{shortUri}")
+    @GetMapping("/pop/{shortUri}")
     public Object popUrl(@PathVariable String shortUri){
         try{
             var entity = urlService.getOriginalUrl(shortUri);

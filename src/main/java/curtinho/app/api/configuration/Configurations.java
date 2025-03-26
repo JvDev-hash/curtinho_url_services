@@ -30,10 +30,18 @@ public class Configurations {
                 .headers(headers -> headers
                     .frameOptions(FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.GET,"p/{shortUri}").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "s").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "qr").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "usrKey").permitAll();
+
+                    //Url endpoints
+                    req.requestMatchers(HttpMethod.GET,"/url/**").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/url/**").permitAll();
+
+                    //QrCode endpoints
+                    req.requestMatchers(HttpMethod.POST, "/qr/**").permitAll();
+
+                    //ApiKey endpoints
+                    req.requestMatchers(HttpMethod.POST, "/apiKey/**").permitAll();
+
+                    //Development endpoint
                     req.requestMatchers("/h2-console/**").permitAll();
                 })
                 .build();
