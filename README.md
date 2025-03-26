@@ -158,14 +158,14 @@ Note: The H2 database is in-memory, which means all data will be reset when the 
 }
 ```
 
+>**OBS: Sometime in the future, this will be updated to a Swagger doc page**
+
 ## Security
 
 The API endpoints are secured as follows:
 - Most endpoints require an API key in the Authorization header
 - The URL redirection endpoint (`GET /url/pop/{shortUri}`) is publicly accessible
 - API key generation endpoint (`POST /apiKey/gen`) is publicly accessible
-
->**OBS: Sometime in the future, this will be updated to a Swagger doc page**
 
 ## Contributing
 
