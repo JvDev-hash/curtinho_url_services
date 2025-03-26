@@ -1,5 +1,10 @@
 package curtinho.app.api.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -21,6 +26,9 @@ public class Url {
     private String originalUrl;
 
     @Column(name = "expiration_date", nullable = false)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonFormat(pattern = "dd-MM-yyyy' 'HH:mm:ss")
     private LocalDateTime expirationDate;
 
     @Column(name = "acess_count")

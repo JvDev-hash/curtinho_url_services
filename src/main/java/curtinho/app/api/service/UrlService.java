@@ -6,6 +6,7 @@ import curtinho.app.api.model.Url;
 import curtinho.app.api.repository.UrlRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -52,6 +53,7 @@ public class UrlService {
         return responseEntity;
     }
 
+    @Cacheable(value = "urls", key = "#shortUri")
     public Url getOriginalUrl(String shortUri){
         return urlRepository.findByShortenedUri(shortUri)
                 .orElseThrow(() -> new EntityNotFoundException("There is no entity with " + shortUri));
