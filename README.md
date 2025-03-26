@@ -10,7 +10,6 @@ Curtinho App Service is a backend service that provides URL shortening functiona
 
 - URL shortening
 - QR code generation
-- RESTful API endpoints
 - Spring Security integration
 - H2 in-memory database
 - JPA for data persistence
