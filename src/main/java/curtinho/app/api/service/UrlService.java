@@ -45,28 +45,23 @@ public class UrlService {
     }
 
     public List<Url> listByEnv(ApiKey apiKey){
-        var entity = urlRepository.findAllByEnvironment(apiKey)
+        return urlRepository.findAllByEnvironment(apiKey)
                 .orElseThrow(() -> new EntityNotFoundException("There is no entity with " + apiKey.getEnvironment()));
-        return entity;
     }
 
     public Url getOriginalUrl(String shortUri){
-        var entity = urlRepository.findByShortenedUri(shortUri)
+        return urlRepository.findByShortenedUri(shortUri)
                 .orElseThrow(() -> new EntityNotFoundException("There is no entity with " + shortUri));
-        return entity;
     }
 
-    public Url getUriByUrl(String url){
-        var entity = urlRepository.findByOriginalUrl(url)
+    public Url listByOriginalUrl(String url, ApiKey apiKey){
+        return urlRepository.findByOriginalUrlAndEnvironment(url, apiKey)
                 .orElseThrow(() -> new EntityNotFoundException("There is no entity with " + url));
-        return entity;
     }
 
     public Url updateAccessCount(Url targetUrl, Long newValue){
         targetUrl.setAccessCount(newValue);
 
-        var returnEntity = urlRepository.save(targetUrl);
-
-        return returnEntity;
+        return urlRepository.save(targetUrl);
     }
 }

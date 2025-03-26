@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/url")
@@ -78,31 +79,21 @@ public class UrlController {
         }
         
     }
-/*
-    @GetMapping("/find")
-    public ResponseEntity<?> findUrl(@RequestBody String url){
-        try {
-            var entity = urlService.getUriByUrl(url);
 
-            return new Re
-        } catch (EntityNotFoundException e){
-            logger.error(e.getMessage());
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-        
-    }
-*/
     @GetMapping("/findUri")
-    public ResponseEntity<?> findUriByUrl(@RequestBody String url){
-
+    public ResponseEntity<?> findUriByUrl(@RequestBody String url, @RequestHeader("Authorization") String apiKey){
+        var response = new UriResponseDTO();
         try {
-            var entity = urlService.getUriByUrl(url);
+            var referenceKey = apiKeyService.getByKey(apiKey);
+            var entity = urlService.listByOriginalUrl(url, referenceKey);
 
-            return new ResponseEntity<>(entity.getShortenedUri(), HttpStatus.OK);
+            response.setShortenUri(entity.getShortenedUri());
+
+            return new ResponseEntity<>(response,HttpStatus.OK);
         } catch (EntityNotFoundException e){
             logger.error(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-        
+
     }
 }

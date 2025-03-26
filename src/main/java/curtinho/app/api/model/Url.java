@@ -17,10 +17,10 @@ public class Url {
     @Column(name = "shortened_uri")
     private String shortenedUri;
 
-    @Column(name = "original_url")
+    @Column(name = "original_url", nullable = false)
     private String originalUrl;
 
-    @Column(name = "expiration_date")
+    @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
 
     @Column(name = "acess_count")
