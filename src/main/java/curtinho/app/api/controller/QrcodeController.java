@@ -1,7 +1,7 @@
 package curtinho.app.api.controller;
 
 import curtinho.app.api.DTO.UrlDTO;
-import curtinho.app.api.DTO.UrlResponseDTO;
+import curtinho.app.api.DTO.UriResponseDTO;
 import curtinho.app.api.service.QrcodeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +24,7 @@ public class QrcodeController {
 
     @PostMapping("/gen")
     public ResponseEntity<?> createQr(@RequestBody UrlDTO urlDTO){
-        var response = new UrlResponseDTO();
+        var response = new UriResponseDTO();
         try {
             response.setShortenUri(qrcodeService.generateQrcode(urlDTO.getLongUrl()));
             return new ResponseEntity<>(response, HttpStatus.CREATED);

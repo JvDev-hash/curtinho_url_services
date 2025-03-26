@@ -27,7 +27,7 @@ public class ApiKeyController {
         var response = new ApiKeyResponseDTO();
 
         try {
-            response.setHashKey(apiKeyService.createApiKey(userDTO.getUsername(), userDTO.getAppName()));
+            response.setHashKey(apiKeyService.createApiKey(userDTO.getUsername(), userDTO.getEnvironment()));
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e){
             logger.error(e.getMessage());

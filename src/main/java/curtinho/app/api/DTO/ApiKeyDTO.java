@@ -7,5 +7,5 @@ public class ApiKeyDTO {
     
     private String username;
 
-    private String appName;
+    private String environment;
 }

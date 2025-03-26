@@ -26,4 +26,8 @@ public class Url {
     @Column(name = "acess_count")
     private Long accessCount;
 
+    @ManyToOne
+    @JoinColumn(name="hashKey_id", nullable = false)
+    private ApiKey apiKey;
+
 }

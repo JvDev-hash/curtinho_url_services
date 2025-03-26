@@ -3,7 +3,7 @@ package curtinho.app.api.DTO;
 import lombok.Data;
 
 @Data
-public class UrlResponseDTO {
+public class UriResponseDTO {
 
     private String shortenUri;
 }

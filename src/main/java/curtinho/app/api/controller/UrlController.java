@@ -1,8 +1,10 @@
 package curtinho.app.api.controller;
 
 import curtinho.app.api.DTO.UrlDTO;
-import curtinho.app.api.DTO.UrlResponseDTO;
+import curtinho.app.api.DTO.UriResponseDTO;
 import curtinho.app.api.helper.ReturnPages;
+import curtinho.app.api.model.ApiKey;
+import curtinho.app.api.service.ApiKeyService;
 import curtinho.app.api.service.UrlService;
 import jakarta.persistence.EntityNotFoundException;
 
@@ -20,18 +22,21 @@ import java.time.LocalDateTime;
 public class UrlController {
 
     private final UrlService urlService;
+    private final ApiKeyService apiKeyService;
 
     Logger logger = LoggerFactory.getLogger(UrlController.class);
 
-    public UrlController(UrlService urlService) {
+    public UrlController(UrlService urlService, ApiKeyService apiKeyService) {
         this.urlService = urlService;
+        this.apiKeyService = apiKeyService;
     }
 
     @PostMapping("/gen")
-    public ResponseEntity<?> shortenUrl(@RequestBody UrlDTO urlDTO){
-        var response = new UrlResponseDTO();
+    public ResponseEntity<?> shortenUrl(@RequestBody UrlDTO urlDTO, @RequestHeader("Authorization") String apiKey){
+        var response = new UriResponseDTO();
         try {
-            response.setShortenUri(urlService.shortenUrl(urlDTO.getLongUrl(), urlDTO.getDays()));
+            var referenceKey = apiKeyService.getByKey(apiKey);
+            response.setShortenUri(urlService.shortenUrl(urlDTO.getLongUrl(), urlDTO.getDays(), referenceKey));
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e){
             logger.error(e.getMessage());
@@ -59,5 +64,45 @@ public class UrlController {
             return new ResponseEntity<>(new ReturnPages().notFoundPage(), HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(new ReturnPages().notFoundPage(), HttpStatus.NOT_FOUND);
+    }
+/*
+    @GetMapping("/list")
+    public ResponseEntity<?> listUrl(@RequestBody String url){
+        try {
+            var entity = urlService.getUriByUrl(url);
+
+            return new Re
+        } catch (EntityNotFoundException e){
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        
+    }
+
+    @GetMapping("/find")
+    public ResponseEntity<?> findUrl(@RequestBody String url){
+        try {
+            var entity = urlService.getUriByUrl(url);
+
+            return new Re
+        } catch (EntityNotFoundException e){
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        
+    }
+*/
+    @GetMapping("/findUri")
+    public ResponseEntity<?> findUriByUrl(@RequestBody String url){
+
+        try {
+            var entity = urlService.getUriByUrl(url);
+
+            return new ResponseEntity<>(entity.getShortenedUri(), HttpStatus.OK);
+        } catch (EntityNotFoundException e){
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        
     }
 }

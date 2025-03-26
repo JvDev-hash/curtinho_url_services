@@ -24,13 +24,13 @@ public class ApiKeyService {
         return apiKey;
     }
 
-    public String createApiKey(String username, String appName){
+    public String createApiKey(String username, String environment){
         StringUtils utils = new StringUtils();
 
         String generatedString = utils.generateRandomString(25);
 
         ApiKey newApiKey = new ApiKey();
-        newApiKey.setAppName(appName);
+        newApiKey.setEnvironment(environment);
         newApiKey.setUsername(username);
         newApiKey.setHashKey(BCrypt.hashpw(generatedString, BCrypt.gensalt(10)));
 
