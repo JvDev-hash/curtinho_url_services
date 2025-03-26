@@ -3,7 +3,6 @@ package curtinho.app.api.controller;
 import curtinho.app.api.DTO.UrlDTO;
 import curtinho.app.api.DTO.UriResponseDTO;
 import curtinho.app.api.helper.ReturnPages;
-import curtinho.app.api.model.ApiKey;
 import curtinho.app.api.service.ApiKeyService;
 import curtinho.app.api.service.UrlService;
 import jakarta.persistence.EntityNotFoundException;
@@ -65,20 +64,21 @@ public class UrlController {
         }
         return new ResponseEntity<>(new ReturnPages().notFoundPage(), HttpStatus.NOT_FOUND);
     }
-/*
-    @GetMapping("/list")
-    public ResponseEntity<?> listUrl(@RequestBody String url){
-        try {
-            var entity = urlService.getUriByUrl(url);
 
-            return new Re
+    @GetMapping("/list")
+    public ResponseEntity<?> listUrl(@RequestHeader("Authorization") String apiKey){
+        try {
+            var referenceKey = apiKeyService.getByKey(apiKey);
+            var entity = urlService.listByEnv(referenceKey);
+
+            return new ResponseEntity<>(entity, HttpStatus.OK);
         } catch (EntityNotFoundException e){
             logger.error(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
         
     }
-
+/*
     @GetMapping("/find")
     public ResponseEntity<?> findUrl(@RequestBody String url){
         try {

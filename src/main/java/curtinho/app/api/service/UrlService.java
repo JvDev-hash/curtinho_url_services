@@ -32,7 +32,7 @@ public class UrlService {
         url.setOriginalUrl(longUrl);
         url.setShortenedUri(generatedString);
         url.setAccessCount(0L);
-        url.setApiKey(apiKey);
+        url.setEnvironment(apiKey);
         if(days.compareTo(365) < 0) {
             url.setExpirationDate(today.plusDays(days));
         } else {
@@ -42,6 +42,12 @@ public class UrlService {
         var entity = urlRepository.save(url);
 
         return entity.getShortenedUri();
+    }
+
+    public List<Url> listByEnv(ApiKey apiKey){
+        var entity = urlRepository.findAllByEnvironment(apiKey)
+                .orElseThrow(() -> new EntityNotFoundException("There is no entity with " + apiKey.getEnvironment()));
+        return entity;
     }
 
     public Url getOriginalUrl(String shortUri){

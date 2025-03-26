@@ -1,7 +1,5 @@
 package curtinho.app.api.model;
 
-import java.util.Set;
-
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,7 +20,4 @@ public class ApiKey {
 
     @Column(name = "hash_key")
     private String hashKey;
-
-    @OneToMany(mappedBy = "apiKey")
-    private Set<Url> urls;
 }
