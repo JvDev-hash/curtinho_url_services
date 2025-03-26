@@ -14,11 +14,13 @@ Curtinho App Service is a backend service that provides URL shortening functiona
 - Spring Security integration
 - H2 in-memory database
 - JPA for data persistence
+- Endpoint caching with Redis
 
 ## Prerequisites
 
 - Java 17 or higher
 - Maven
+- Redis stack server
 
 ## Tech Stack
 
@@ -28,6 +30,7 @@ Curtinho App Service is a backend service that provides URL shortening functiona
 - H2 Database
 - ZXing (QR Code generation)
 - Lombok
+- Redis
 
 ## Getting Started
 
@@ -63,11 +66,12 @@ Note: The H2 database is in-memory, which means all data will be reset when the 
 
 ## API Endpoints
 
-### URL Shortening
+### URL Management
 
 #### Create Short URL
-- **Endpoint**: `POST /s`
+- **Endpoint**: `POST /url/gen`
 - **Description**: Creates a shortened URL from a long URL
+- **Authentication**: Requires API key in Authorization header
 - **Request Body**:
 ```json
 {
@@ -83,16 +87,44 @@ Note: The H2 database is in-memory, which means all data will be reset when the 
 ```
 
 #### Access Short URL
-- **Endpoint**: `GET /p/{shortUri}`
-- **Description**: Redirects to the original URL
+- **Endpoint**: `GET /url/pop/{shortUri}`
+- **Description**: Redirects to the original URL if not expired
 - **Parameters**: 
   - `shortUri`: The shortened URL identifier
 - **Response**: Redirects to the original URL or returns 404 if not found/expired
 
+#### Delete Short URL
+- **Endpoint**: `DELETE /url/del`
+- **Description**: Deletes a shortened URL
+- **Request Body**:
+```json
+{
+    "shortenUri": "short-url-to-delete"
+}
+```
+
+#### List URLs
+- **Endpoint**: `GET /url/list`
+- **Description**: Lists all URLs for the given API key
+- **Authentication**: Requires API key in Authorization header
+- **Response**: List of URL entities
+
+#### Find URI by Original URL
+- **Endpoint**: `GET /url/findUri`
+- **Description**: Finds shortened URI by original URL
+- **Authentication**: Requires API key in Authorization header
+- **Request Body**: Original URL as string
+- **Response**:
+```json
+{
+    "shortenUri": "found-short-url"
+}
+```
+
 ### QR Code Generation
 
 #### Generate QR Code
-- **Endpoint**: `POST /qr`
+- **Endpoint**: `POST /qr/gen`
 - **Description**: Generates a QR code for a given URL
 - **Request Body**:
 ```json
@@ -109,14 +141,14 @@ Note: The H2 database is in-memory, which means all data will be reset when the 
 
 ### API Key Management
 
-#### Create User API Key
-- **Endpoint**: `POST /usrKey`
+#### Create API Key
+- **Endpoint**: `POST /apiKey/gen`
 - **Description**: Generates an API key for a user
 - **Request Body**:
 ```json
 {
     "username": "user123",
-    "appName": "MyApp"
+    "environment": "environment-name"
 }
 ```
 - **Response**: 
@@ -128,10 +160,12 @@ Note: The H2 database is in-memory, which means all data will be reset when the 
 
 ## Security
 
-The API endpoints are secured with token-based authentication:
-- `POST /qr` and `POST /s` endpoints require an Authorization header with a valid token
-- `GET /p/{shortUri}` and `POST /usrKey` endpoints is publicly accessible
-- H2 console is accessible without authentication in development mode
+The API endpoints are secured as follows:
+- Most endpoints require an API key in the Authorization header
+- The URL redirection endpoint (`GET /url/pop/{shortUri}`) is publicly accessible
+- API key generation endpoint (`POST /apiKey/gen`) is publicly accessible
+
+>**OBS: Sometime in the future, this will be updated to a Swagger doc page**
 
 ## Contributing
 
