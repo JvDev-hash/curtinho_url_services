@@ -45,8 +45,11 @@ public class UrlService {
     }
 
     public List<Url> listByEnv(ApiKey apiKey){
-        return urlRepository.findAllByEnvironment(apiKey)
-                .orElseThrow(() -> new EntityNotFoundException("There is no entity with " + apiKey.getEnvironment()));
+        var responseEntity = urlRepository.findAllByEnvironment(apiKey);
+        if(responseEntity.isEmpty()){
+            throw new EntityNotFoundException("There is no entity in this environment: " + apiKey.getEnvironment());
+        }
+        return responseEntity;
     }
 
     public Url getOriginalUrl(String shortUri){
@@ -63,5 +66,13 @@ public class UrlService {
         targetUrl.setAccessCount(newValue);
 
         return urlRepository.save(targetUrl);
+    }
+
+    public void deleteUrl(String uri){
+        var entity = urlRepository.findByShortenedUri(uri)
+                .orElseThrow(() -> new EntityNotFoundException("There is no entity with " + uri));
+
+        urlRepository.deleteById(entity.getId());
+
     }
 }

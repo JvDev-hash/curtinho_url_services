@@ -34,6 +34,7 @@ public class Configurations {
                     //Url endpoints
                     req.requestMatchers(HttpMethod.GET,"/url/**").permitAll();
                     req.requestMatchers(HttpMethod.POST, "/url/**").permitAll();
+                    req.requestMatchers(HttpMethod.DELETE, "/url/**").permitAll();
 
                     //QrCode endpoints
                     req.requestMatchers(HttpMethod.POST, "/qr/**").permitAll();

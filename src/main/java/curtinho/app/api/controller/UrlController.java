@@ -66,6 +66,18 @@ public class UrlController {
         return new ResponseEntity<>(new ReturnPages().notFoundPage(), HttpStatus.NOT_FOUND);
     }
 
+    @DeleteMapping("/del")
+    public ResponseEntity<?> deleteShortenUrl(@RequestBody UriResponseDTO uri){
+        try{
+            urlService.deleteUrl(uri.getShortenUri());
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e){
+            logger.error(e.getMessage());
+            return new ResponseEntity<>("Internal server error", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/list")
     public ResponseEntity<?> listUrl(@RequestHeader("Authorization") String apiKey){
         try {

@@ -16,5 +16,5 @@ public interface UrlRepository  extends JpaRepository<Url, Long> {
 
     //Optional<List<Url>> findAllByOriginalUrlAndEnvironment(String originalUrl, ApiKey apiKey);
 
-    Optional<List<Url>> findAllByEnvironment(ApiKey apiKey);
+    List<Url> findAllByEnvironment(ApiKey apiKey);
 }
